@@ -5,6 +5,8 @@
 # =====================
 cpu_top5() {
     echo "[CPU TOP5] 기능 실행"
+
+    ps -eo pid,comm,%cpu --sort=-%cpu | head -n 6
 }
 
 # =====================
