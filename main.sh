@@ -25,8 +25,9 @@ port_process() {
 # 4) Git log 분석 기능
 # =====================
 gitlog_ranking() {
+    echo
     echo "========================================"
-    echo "    ✨ 프로젝트 커밋 기여자 순위 분석 ✨"
+    echo "     프로젝트 커밋 기여자 순위 분석 "
     echo "========================================"
 
     git log --pretty=format:"%an" | sort | uniq -c | sort -nr | while read count name
