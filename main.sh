@@ -11,7 +11,9 @@ cpu_top5() {
 # 2) 확장자별 개수 기능
 # =====================
 ext_counter() {
-    echo "[확장자별 파일 개수 분석 기능 실행]"
+    echo
+    echo "===== 확장자별 파일 개수 분석 ====="
+    echo
 
     read -p "분석할 디렉토리 경로를 입력하세요: " target_dir
 
@@ -20,7 +22,13 @@ ext_counter() {
         return
     fi
 
-    find "$target_dir" -type f | awk -F. '{print $NF}' | sort | uniq -c
+    find "$target_dir" -type f |
+    awk -F. '{print $NF}' |
+    sort |
+    uniq -c |
+    awk '{printf "%-10s %s\n", $1, $2}'
+    
+    echo
 }
 
 # =====================
