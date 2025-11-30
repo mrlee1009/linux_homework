@@ -22,7 +22,7 @@ ext_counter() {
         return
     fi
 
-    find "$target_dir" -type f |
+    find "$target_dir" -type f 2>/dev/null |
     awk -F. 'NF>1 {print $NF}' |
     sort |
     uniq -c |
