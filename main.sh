@@ -19,6 +19,8 @@ ext_counter() {
         echo "오류: 유효한 디렉토리가 아닙니다."
         return
     fi
+
+    find "$target_dir" -type f | awk -F. '{print $NF}' | sort | uniq -c
 }
 
 # =====================
