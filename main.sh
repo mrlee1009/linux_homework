@@ -23,11 +23,11 @@ ext_counter() {
     fi
 
     find "$target_dir" -type f |
-    awk -F. '{print $NF}' |
+    awk -F. 'NF>1 {print $NF}' |
     sort |
     uniq -c |
     awk '{printf "%-10s %s\n", $1, $2}'
-    
+
     echo
 }
 
