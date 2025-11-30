@@ -4,9 +4,16 @@
 # 1) CPU TOP5 기능
 # =====================
 cpu_top5() {
-    echo "[CPU TOP5] 기능 실행"
+    echo
+    echo "===== CPU TOP 5 Processes ====="
+    echo
 
-    ps -eo pid,comm,%cpu --sort=-%cpu | head -n 6
+    ps -eo pid,comm,%cpu --sort=-%cpu | head -n 6 | awk '
+        NR==1 { printf "%-10s %-25s %-10s\n", "PID", "PROCESS", "CPU%" }
+        NR>1 { printf "%-10s %-25s %-10s\n", $1, $2, $3 }
+    '
+
+    echo
 }
 
 # =====================
