@@ -28,6 +28,11 @@ gitlog_ranking() {
     echo "========================================"
     echo "    ✨ 프로젝트 커밋 기여자 순위 분석 ✨"
     echo "========================================"
+
+    git log --pretty=format:"%an" | sort | uniq -c | sort -nr | while read count name
+    do
+        printf " %s 커밋: %s\n" "$count" "$name"
+    done
 }
 
 # =====================
