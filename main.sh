@@ -8,15 +8,27 @@ cpu_top5() {
     echo "===== CPU TOP 5 Processes ====="
     echo
 
-    ps -eo pid,comm,%cpu --sort=-%cpu 2>/dev/null |
-    head -n 6 |
-    awk '
-        NR==1 { printf "%-10s %-25s %-10s\n", "PID", "PROCESS", "CPU%" }
-        NR>1  { printf "%-10s %-25s %-10s\n", $1, $2, $3 }
-    '
+    OS_NAME=$(uname)
 
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
-        echo "오류: 프로세스 정보를 가져올 수 없습니다."
+    # ------ macOS ------
+    if [[ "$OS_NAME" == "Darwin" ]]; then
+        ps -arcwwwxo pid,comm,%cpu | head -n 6 | awk '
+            NR==1 { printf "%-10s %-25s %-10s\n", "PID", "PROCESS", "CPU%" }
+            NR>1  { printf "%-10s %-25s %-10s\n", $1, $2, $3 }
+        '
+
+    # ------ Windows Git Bash ------
+    elif [[ "$OS_NAME" == MINGW* || "$OS_NAME" == MSYS* || "$OS_NAME" == CYGWIN* ]]; then
+        wmic path Win32_PerfFormattedData_PerfProc_Process get Name,IDProcess,PercentProcessorTime /format:csv |
+        tail -n +2 | head -n 10 | awk -F"," '
+            NR==1 { printf "%-10s %-25s %-10s\n", "PID", "PROCESS", "CPU%" }
+            NR>1 {
+                if ($3 != "") printf "%-10s %-25s %-10s\n", $2, $3, $4
+            }
+        '
+
+    else
+        echo "지원하지 않는 OS입니다: $OS_NAME"
     fi
 
     echo
