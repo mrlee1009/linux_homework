@@ -14,6 +14,11 @@ ext_counter() {
     echo "[확장자별 파일 개수 분석 기능 실행]"
 
     read -p "분석할 디렉토리 경로를 입력하세요: " target_dir
+
+    if [ ! -d "$target_dir" ]; then
+        echo "오류: 유효한 디렉토리가 아닙니다."
+        return
+    fi
 }
 
 # =====================
