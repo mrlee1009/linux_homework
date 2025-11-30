@@ -38,7 +38,19 @@ port_process() {
 # 4) Git log 분석 기능
 # =====================
 gitlog_ranking() {
-    :
+    echo
+    echo "========================================"
+    echo "     프로젝트 커밋 기여자 순위 분석 "
+    echo "========================================"
+
+    git log --pretty=format:"%an" | sort | uniq -c | sort -nr | while read count name
+    do
+        printf " %s 커밋: %s\n" "$count" "$name"
+    done
+    
+    echo "----------------------------------------"
+    echo "분석 완료: 커밋 수가 많은 순서대로 정렬되었습니다."
+    echo
 }
 
 # =====================
