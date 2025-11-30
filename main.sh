@@ -19,18 +19,34 @@ ext_counter() {
 # =====================
 port_process() {
     echo
-    echo "=== 현재 LISTEN 중인 TCP 포트 및 PID ==="
-    echo "프로토콜   로컬주소:포트        PID"
-    echo "----------------------------------------"
 
-    netstat -ano | grep 'LISTEN' | while read LINE; do
-        PROTO=$(echo "$LINE" | awk '{print $1}')
-        LOCAL=$(echo "$LINE" | awk '{print $2}')
-        PID=$(echo "$LINE" | awk '{print $5}')
-        printf "%-7s %-20s %s\n" "$PROTO" "$LOCAL" "$PID"
-    done
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "=== 현재 LISTEN 중인 TCP 포트 및 PID (macOS) ==="
+        echo "프로토콜   로컬주소:포트      PID"
+        echo "----------------------------------------"
 
-    echo "----------------------------------------"
+        lsof -iTCP -sTCP:LISTEN -n -P | awk '
+            NR>1 {
+                printf "%-10s %-20s %s\n", $5, $9, $2
+            }
+        '
+    else
+        echo
+        echo "=== 현재 LISTEN 중인 TCP 포트 및 PID (window)==="
+        echo "프로토콜   로컬주소:포트        PID"
+        echo "----------------------------------------"
+
+        netstat -ano | grep 'LISTEN' | while read LINE; do
+            # 예: TCP    0.0.0.0:8080      0.0.0.0:0        LISTENING       1234
+            PROTO=$(echo "$LINE" | awk '{print $1}')
+            LOCAL=$(echo "$LINE" | awk '{print $2}')
+            PID=$(echo "$LINE" | awk '{print $5}')
+            printf "%-7s %-20s %s\n" "$PROTO" "$LOCAL" "$PID"
+        done
+
+        echo "----------------------------------------"
+        echo
+    fi
     echo
 }
 
