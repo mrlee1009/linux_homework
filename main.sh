@@ -8,10 +8,14 @@ cpu_top5() {
     echo "===== CPU TOP 5 Processes ====="
     echo
 
-    ps -eo pid,comm,%cpu --sort=-%cpu | head -n 6 | awk '
+    ps -eo pid,comm,%cpu --sort=-%cpu 2>/dev/null | head -n 6 | awk '
         NR==1 { printf "%-10s %-25s %-10s\n", "PID", "PROCESS", "CPU%" }
         NR>1 { printf "%-10s %-25s %-10s\n", $1, $2, $3 }
     '
+
+    if [ $? -ne 0 ]; then
+        echo "오류: 프로세스 정보를 가져올 수 없습니다."
+    fi
 
     echo
 }
