@@ -26,7 +26,24 @@ cpu_top5() {
 # 2) 확장자별 개수 기능
 # =====================
 ext_counter() {
-    :
+    echo
+    echo "===== 확장자별 파일 개수 분석 ====="
+    echo
+
+    read -p "분석할 디렉토리 경로를 입력하세요: " target_dir
+
+    if [ ! -d "$target_dir" ]; then
+        echo "오류: 유효한 디렉토리가 아닙니다."
+        return
+    fi
+
+    find "$target_dir" -type f 2>/dev/null |
+    awk -F. 'NF>1 {print $NF}' |
+    sort |
+    uniq -c |
+    awk '{printf "%-10s %s\n", $1, $2}'
+
+    echo
 }
 
 # =====================
