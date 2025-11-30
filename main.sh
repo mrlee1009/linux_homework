@@ -22,6 +22,16 @@ port_process() {
     echo "=== 현재 LISTEN 중인 TCP 포트 및 PID ==="
     echo "프로토콜   로컬주소:포트        PID"
     echo "----------------------------------------"
+
+    netstat -ano | grep 'LISTEN' | while read LINE; do
+        PROTO=$(echo "$LINE" | awk '{print $1}')
+        LOCAL=$(echo "$LINE" | awk '{print $2}')
+        PID=$(echo "$LINE" | awk '{print $5}')
+        printf "%-7s %-20s %s\n" "$PROTO" "$LOCAL" "$PID"
+    done
+
+    echo "----------------------------------------"
+    echo
 }
 
 # =====================
